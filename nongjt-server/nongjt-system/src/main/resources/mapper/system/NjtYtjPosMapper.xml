@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaorange.system.mapper.NjtYtjPosMapper">
+
+	<resultMap type="NjtYtjPos" id="NjtYtjPosResult">
+		<id     property="id"             column="id"              />
+		<result property="province"       column="province"        />
+		<result property="city"           column="city"            />
+		<result property="area"           column="area"            />
+		<result property="country"        column="country"         />
+		<result property="detailAddress"  column="detail_address"  />
+		<result property="posName"        column="pos_name"        />
+		<result property="serialCode"     column="serial_code"     />
+		<result property="status"         column="status"          />
+		<result property="createBy"       column="create_by"       />
+		<result property="createTime"     column="create_time"     />
+		<result property="updateBy"       column="update_by"       />
+		<result property="updateTime"     column="update_time"     />
+	</resultMap>
+	
+	<sql id="selectNjtYtjPosVo">
+        select id, province, city, area, country, detail_address, pos_name, serial_code, status, create_by, create_time, update_by, update_time
+		from njt_ytj_pos
+    </sql>
+	
+	<select id="selectNjtYtjPosList" parameterType="NjtYtjPos" resultMap="NjtYtjPosResult">
+	    <include refid="selectNjtYtjPosVo"/>
+		<where>
+			<if test="province != null and province != ''">
+				AND province like concat('%', #{province}, '%')
+			</if>
+			<if test="city != null and city != ''">
+				AND city like concat('%', #{city}, '%')
+			</if>
+			<if test="area != null and area != ''">
+				AND area like concat('%', #{area}, '%')
+			</if>
+			<if test="posName != null and posName != ''">
+				AND pos_name like concat('%', #{posName}, '%')
+			</if>
+			<if test="status != null">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectNjtYtjPosAll" resultMap="NjtYtjPosResult">
+		<include refid="selectNjtYtjPosVo"/>
+	</select>
+	
+	<select id="selectNjtYtjPosById" parameterType="Long" resultMap="NjtYtjPosResult">
+		<include refid="selectNjtYtjPosVo"/>
+		where id = #{id}
+	</select>
+	
+	<update id="updateNjtYtjPos" parameterType="NjtYtjPos">
+ 		update njt_ytj_pos
+ 		<set>
+ 			<if test="province != null and province != ''">province = #{province},</if>
+ 			<if test="city != null and city != ''">city = #{city},</if>
+ 			<if test="area != null and area != ''">area = #{area},</if>
+ 			<if test="country != null and country != ''">country = #{country},</if>
+ 			<if test="detailAddress != null and detailAddress != ''">detail_address = #{detailAddress},</if>
+ 			<if test="posName != null and posName != ''">pos_name = #{posName},</if>
+ 			<if test="serialCode != null and serialCode != ''">serial_code = #{serialCode},</if>
+ 			<if test="status != null">status = #{status},</if>
+ 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+ 			update_time = sysdate()
+ 		</set>
+ 		where id = #{id}
+	</update>
+ 	
+ 	<insert id="insertNjtYtjPos" parameterType="NjtYtjPos" useGeneratedKeys="true" keyProperty="id">
+ 		insert into njt_ytj_pos(
+ 			<if test="id != null">id,</if>
+ 			<if test="province != null and province != ''">province,</if>
+ 			<if test="city != null and city != ''">city,</if>
+ 			<if test="area != null and area != ''">area,</if>
+ 			<if test="country != null and country != ''">country,</if>
+ 			<if test="detailAddress != null and detailAddress != ''">detail_address,</if>
+ 			<if test="posName != null and posName != ''">pos_name,</if>
+ 			<if test="serialCode != null and serialCode != ''">serial_code,</if>
+ 			<if test="status != null">status,</if>
+ 			<if test="createBy != null and createBy != ''">create_by,</if>
+ 			<if test="updateBy != null and updateBy != ''">update_by,</if>
+ 			create_time,
+ 			update_time
+ 		)values(
+ 			<if test="id != null">#{id},</if>
+ 			<if test="province != null and province != ''">#{province},</if>
+ 			<if test="city != null and city != ''">#{city},</if>
+ 			<if test="area != null and area != ''">#{area},</if>
+ 			<if test="country != null and country != ''">#{country},</if>
+ 			<if test="detailAddress != null and detailAddress != ''">#{detailAddress},</if>
+ 			<if test="posName != null and posName != ''">#{posName},</if>
+ 			<if test="serialCode != null and serialCode != ''">#{serialCode},</if>
+ 			<if test="status != null">#{status},</if>
+ 			<if test="createBy != null and createBy != ''">#{createBy},</if>
+ 			<if test="updateBy != null and updateBy != ''">#{updateBy},</if>
+ 			sysdate(),
+ 			sysdate()
+ 		)
+	</insert>
+	
+	<delete id="deleteNjtYtjPosById" parameterType="Long">
+		delete from njt_ytj_pos where id = #{id}
+	</delete>
+	
+	<delete id="deleteNjtYtjPosByIds" parameterType="Long">
+ 		delete from njt_ytj_pos where id in
+ 		<foreach collection="array" item="id" open="(" separator="," close=")">
+ 			#{id}
+        </foreach> 
+ 	</delete>
+
+</mapper>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaorange.system.mapper.NjtAreaMapper">
+
+    <resultMap type="NjtArea" id="NjtAreaResult">
+        <id     property="id"          column="id"/>
+        <result property="code"        column="code"/>
+        <result property="parentCode"  column="parent_code"/>
+        <result property="name"        column="name"/>
+        <result property="unit"        column="unit"/>
+        <result property="status"      column="status"/>
+        <result property="createBy"    column="create_by"/>
+        <result property="createTime"  column="create_time"/>
+        <result property="updateBy"    column="update_by"/>
+        <result property="updateTime"  column="update_time"/>
+    </resultMap>
+
+    <sql id="selectNjtAreaVo">
+        select id, code, parent_code, name, unit, status, create_by, create_time, update_by, update_time
+        from njt_area
+    </sql>
+
+    <select id="selectByParentCode" parameterType="string" resultMap="NjtAreaResult">
+        <include refid="selectNjtAreaVo"/>
+        WHERE (parent_code = #{parentCode} OR (#{parentCode} = '0' AND parent_code IS NULL))
+        AND status = 1
+        ORDER BY code
+    </select>
+
+    <select id="selectById" parameterType="string" resultMap="NjtAreaResult">
+        <include refid="selectNjtAreaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertArea" parameterType="NjtArea" useGeneratedKeys="true" keyProperty="id">
+        insert into njt_area(id, code, parent_code, name, unit, status, create_by, create_time, update_by, update_time)
+        values (#{id}, #{code}, #{parentCode}, #{name}, #{unit}, #{status}, #{createBy}, sysdate(), #{updateBy}, sysdate())
+    </insert>
+
+    <update id="updateArea" parameterType="NjtArea">
+        update njt_area
+        <set>
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="parentCode != null and parentCode != ''">parent_code = #{parentCode},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+        delete from njt_area where id = #{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="string">
+        delete from njt_area where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
